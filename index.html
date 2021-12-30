@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: lightblue;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-around;
+            flex-direction: row;
+        }
+
+        .div {
+            visibility: hidden;
+        }
+
+        .title {
+            font-size: large;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .fileSharingContainer {
+            margin: auto;
+            margin-top: 15%;
+            background-color: white;
+            justify-self: center;
+            height: 250px;
+            width: 50%;
+            border: 2px dotted black;
+            border-radius: 20px;
+        }
+
+        .fileSharingContainer>div {
+            margin-left: 25%;
+            margin-top: 6%;
+        }
+
+        button {
+            height: 20%;
+            background-color: cornsilk;
+        }
+
+        #preLoader {
+            margin: 0;
+            padding: 0;
+            background: #000 url(./spinner.gif) no-repeat center center;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 100;
+        }
+    </style>
+    <title>My Sharing Application</title>
+    <script defer>
+        function enableButton() {
+            document.getElementById('uploadFile').disabled = false;
+            document.getElementById("preLoader").style.display = "unset";
+            setTimeout(() => {
+                console.log("hello");
+                document.getElementById("preLoader").style.display = "none";
+            }, 1000)
+        }
+        function uploadFile(event) {
+            document.getElementById("preLoader").style.display = "unset";
+            setTimeout(() => {
+                console.log("hello");
+                document.getElementById("preLoader").style.display = "none";
+            }, 1000)
+            event.preventDefault();
+            const input = document.getElementById('file');
+            const fd = new FormData();
+            fd.append('myfile', input.files[0]);
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                let response = JSON.parse(xhr.response);
+                console.log(response);
+                localStorage.setItem('link', response.file);
+                window.open(response.file, "_self")
+            }
+            xhr.open('POST', 'https://myshare1997.herokuapp.com/api/files');
+            xhr.send(fd);
+            console.log(event);
+        }
+        window.addEventListener("load", function () {
+            setTimeout(() => {
+                console.log("hello");
+                document.getElementById("preLoader").style.display = "none";
+            }, 2000)
+
+        })
+    </script>
+</head>
+
+<body>
+    <div id="preLoader"></div>
+    <div class="container">
+        <div class="title">My sharing Application</div>
+        <div class="div">My sharing</div>
+    </div>
+    <div class="fileSharingContainer">
+        <div>
+            <img src="https://img.icons8.com/material-outlined/96/000000/upload--v2.png" />
+            <p>Drag & Drop or<input id="file" type="file" onchange="enableButton()" name="myfile" value="myfile" />
+            </p>
+            <button id="uploadFile" disabled=true onclick="uploadFile(event)">Upload File</button>
+        </div>
+    </div>
+</body>
+
+</html>
